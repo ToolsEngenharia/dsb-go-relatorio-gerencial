@@ -34,6 +34,7 @@ dfActivities = pd.DataFrame(getDados())
 dfActivities = dfActivities.iloc[1:]
 dfActivities = dfActivities.drop(columns=['ID'])
 dfActivities = dfActivities.drop_duplicates(subset=['OBRA', 'DATA'])
+dfActivities['DATA'] = dfActivities['DATA'].str.split('T').str[0]
 dfActivities['DATA'] = pd.to_datetime(dfActivities['DATA'], format='%Y-%m-%d')
 dfActivities['DIA_UTIL'] = dfActivities.apply(lambda x: dataEhUtil(x['DATA'].year, x['DATA'].month, x['DATA'].day), axis=1)
 dfActivities['MES'] = pd.to_datetime(dfActivities['DATA']).dt.to_period('M')
