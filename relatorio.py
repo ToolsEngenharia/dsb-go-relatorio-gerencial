@@ -27,7 +27,6 @@ dfPBIs = pd.DataFrame(getDadosPBI())
 dfPBIs['MES'] = pd.to_datetime(dfPBIs['DATA']).dt.to_period('M')
 dfPBIs = pd.merge(dfPBIs, dfMonday[['SIGLA', 'RCR']], left_on='SIGLA', right_on='SIGLA', how='left')
 dfPBIs['SIGLA'] = dfPBIs['SIGLA'].str.strip()
-dfPBIs['DATA'] = pd.to_datetime(dfPBIs['DATA'], format='%Y-%m-%d')
 dfPBIs = dfPBIs.drop_duplicates(subset=['SIGLA', 'MES'])
 dfPBIs = dfPBIs.drop(columns=['DATA'])
 
