@@ -24,7 +24,7 @@ dfMonday['INICIO'] = pd.to_datetime(dfMonday['INICIO'], format='%Y-%m-%d')
 dfMonday['TERMINO'] = pd.to_datetime(dfMonday['TERMINO'], format='%Y-%m-%d')
 
 dfPBIs = pd.DataFrame(getDadosPBI())
-dfPBIs['MES'] = pd.to_datetime(dfPBIs['DATA'], format='%Y-%m-%d').dt.to_period('M')
+dfPBIs['MES'] = pd.to_datetime(dfPBIs['DATA'], format='%Y-%m-%d').dt.tz_localize(None).dt.to_period('M')
 dfPBIs = pd.merge(dfPBIs, dfMonday[['SIGLA', 'RCR']], left_on='SIGLA', right_on='SIGLA', how='left')
 dfPBIs['SIGLA'] = dfPBIs['SIGLA'].str.strip()
 dfPBIs['DATA'] = pd.to_datetime(dfPBIs['DATA'], format='%Y-%m-%d')
@@ -37,7 +37,7 @@ dfActivities = dfActivities.drop(columns=['ID'])
 dfActivities = dfActivities.drop_duplicates(subset=['OBRA', 'DATA'])
 dfActivities['DATA'] = pd.to_datetime(dfActivities['DATA'], format='%Y-%m-%d')
 dfActivities['DIA_UTIL'] = dfActivities.apply(lambda x: dataEhUtil(x['DATA'].year, x['DATA'].month, x['DATA'].day), axis=1)
-dfActivities['MES'] = pd.to_datetime(dfActivities['DATA'], format='%Y-%m-%d').dt.to_period('M')
+dfActivities['MES'] = pd.to_datetime(dfActivities['DATA'], format='%Y-%m-%d').dt.tz_localize(None).dt.to_period('M')
 dfActivities = dfActivities.groupby(['OBRA', 'MES', 'DIA_UTIL']).size().unstack(fill_value=0).reset_index()
 dfActivities.columns = ['OBRA', 'MES', 'NÃO ÚTIL', 'ÚTIL']
 dfActivities['QUANTIDADE DE DIAS ÚTEIS'] = dfActivities.apply(lambda x: quantidade_dias_uteis(x['MES'].year, x['MES'].month), axis=1)
@@ -121,9 +121,7 @@ for rdc in dfActivities['RCR'].unique():
 			# with col4:
 			# 	st.metric('% PBIs', round(dfPBIs1['ÚTIL'].count() / dfPBIs1['SIGLA'].count() * 100, 2), border=True)
 
-			# converte a coluna 'MES' para datetime
-			# pivot table colunas meses e linhas obras
-			df_temp = dfActivities1.copy()  # mantém os dados originais antes do pivot
+			df_temp = dfActivities1.copy()
 			dfActivities1 = df_temp.pivot(index='OBRA', columns='MES', values='ÚTIL')
 			dfActivities1 = dfActivities1.fillna(0).astype(int)
 			dfActivities1 = dfActivities1.where(pd.notnull(dfActivities1), '')
