@@ -1,8 +1,7 @@
-import workalendar.america as america
+from workalendar.america import BrazilSaoPauloCity
 import datetime as dt
-import numpy as np
 
-cal = america.BrazilSaoPauloCity()
+cal = BrazilSaoPauloCity()
 
 def quantidade_dias_uteis(ano, mes):
     mes = int(mes)
