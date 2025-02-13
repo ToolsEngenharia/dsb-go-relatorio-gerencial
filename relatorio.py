@@ -1,8 +1,6 @@
 import streamlit as st
-import numpy as np
 import pandas as pd
 from getDados import get_dataModay, getDados, getDadosPBI
-from datetime import datetime
 from utildia import quantidade_dias_uteis, dataEhUtil
 # Configuração da página
 st.set_page_config(layout='wide', initial_sidebar_state='collapsed')
